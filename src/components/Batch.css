@@ -1,0 +1,170 @@
+.Batch {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto Mono", monospace;
+  padding: 15px;
+  border: 1px solid #292929;
+  border-radius: 10px;
+  box-shadow: 5px 5px #292929;
+  max-width: 700px;
+  user-select: none;
+  margin-bottom: 20px;
+}
+
+.Batch--Heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0px;
+  border-bottom: 1px solid #bbbbbb;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.Batch--Heading > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Batch--Time--Stats {
+  display: flex;
+  align-items: center;
+}
+
+.Batch--Time--Stats div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 7px 7px 0px;
+  border-bottom: 1px solid #bbbbbb;
+  border-right: 1px solid #bbbbbb;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.Batch--Time--Stats div:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 0px 7px 7px;
+  border-bottom: 1px solid #bbbbbb;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.Batch--Price--Stats {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.Batch--Price--Stats--Info {
+  display: flex;
+  align-items: center;
+  padding: 7px 0px;
+  gap: 10px;
+}
+
+.Batch--Price--Container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0px 25px 0px;
+  border-bottom: 1px solid #bbbbbb;
+}
+
+.Batch--Price--Container > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
+.Batch--Tickets--Price,
+.Batch--Tickets--Sold {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0px 14px 0px;
+  border-bottom: 1px solid #bbbbbb;
+}
+
+.Batch--Tickets--Price > div,
+.Batch--Tickets--Sold > div {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.Batch--Tickets--Sold {
+  border-bottom: none;
+}
+
+.Batch--Buy--Container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.Batch--Add--Button {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 15px;
+  padding: 10px;
+  border: 1px solid #292929;
+  border-radius: 10px;
+  box-shadow: -3px -3px #292929;
+  cursor: pointer;
+  background-color: #f4f2f5;
+}
+
+.Batch--Buy--Button {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: #2fad23;
+  color: white;
+  gap: 15px;
+  padding: 10px;
+  border: 1px solid #292929;
+  border-radius: 10px;
+  box-shadow: 3px 3px #292929;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.gray {
+  color: #666666;
+  font-weight: 400;
+}
+
+.big {
+  font-size: 23px;
+}
+
+@media (max-width: 409px) {
+  .Batch--Add--Button {
+    flex-grow: 1;
+  }
+  .big {
+    font-size: 17px;
+  }
+  .Batch--Price--Container > div {
+    justify-content: center;
+  }
+  .grow {
+    width: 100%;
+  }
+  .invisible {
+    display: none;
+  }
+}
+
+.keyDown {
+  background-color: #bbbbbb;
+}

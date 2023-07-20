@@ -1,0 +1,70 @@
+.carousel--container {
+  display: flex;
+  gap: 2%;
+  justify-content: center;
+  padding: 5px 10px;
+}
+
+.carousel--card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: "Roboto Mono", monospace;
+  min-width: 200px;
+  border: 1px solid #292929;
+  border-radius: 15px;
+  box-shadow: 5px 5px #292929;
+  padding: 15px;
+  width: 100%;
+  transition: background-color 0.5s ease;
+}
+
+.carousel--card:hover {
+  background-color: #fffbd5;
+  cursor: pointer;
+}
+
+.carousel--card > img {
+  width: 80px;
+}
+
+.carousel--card > h4 {
+  margin-bottom: 15px;
+  overflow-wrap: break-word;
+}
+
+.carousel--card > div {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.carousel--card > div span:first-of-type {
+  flex-grow: 1;
+}
+
+@media (max-width: 550px) {
+  .carousel--container {
+    overflow-x: scroll;
+    justify-content: flex-start;
+    padding-bottom: 10px;
+    gap: 15px;
+  }
+
+  .carousel--container::-webkit-scrollbar {
+    height: 10px;
+    display: inline-block;
+  }
+  .carousel--container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  .carousel--container::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #292929;
+  }
+  .carousel--container::-webkit-scrollbar-button {
+    width: 11px;
+  }
+}
