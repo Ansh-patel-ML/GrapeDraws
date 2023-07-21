@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import Batch from "./Batch";
 
 import "./ActiveBatches.css";
+import GrapeDraw from "../contracts/GrapeDraw.json";
+import { WalletContext } from "../App";
+import Web3 from "web3";
 
 const ActiveBatches = () => {
+  const { metaMaskAccountInfo, setMetaMaskAccountInfo } =
+    useContext(WalletContext);
+
+  useEffect(() => {
+    const web3Instance = new Web3(window.ethereum);
+    const contractAddress = "0x93C6D6c09a2682285268c2C2168Aca6B4a236887";
+    const contract = new web3Instance.eth.Contract(
+      GrapeDraw.abi,
+      contractAddress
+    );
+    setMetaMaskAccountInfo({
+      ...metaMaskAccountInfo,
+      web3: web3Instance,
+      contractInstance: contract,
+    });
+  }, []);
   return (
     <div className="Active--Batches">
       <h1>Active Batches</h1>

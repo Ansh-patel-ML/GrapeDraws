@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import EtheriumIcon from "../assets/Icons/Ethereum.svg";
 import CoinOne from "../assets/Icons/FirstPlace.svg";
@@ -9,7 +9,7 @@ import RightArrowBtn from "../assets/Icons/RightArrowBtn.svg";
 import InfoIcon from "../assets/Icons/16.svg";
 import { WalletContext } from "../App";
 import ConnectMetaMask from "./modals/ConnectMetaMask";
-import { _Bid } from "../ContractFunctions";
+import { _Bid, _getBidCount, _getBidPrice } from "../ContractFunctions";
 import MessagePopUp from "./modals/MessagePopUp";
 import "./Batch.css";
 
@@ -17,8 +17,12 @@ const Batch = () => {
   const [tickets, SetTickets] = useState(2);
   const [openModal, setOpenModal] = useState(false);
   const [isConnectedPopUp, setIsConnectedPopUp] = useState(false);
+  const [isTransactionOngoing, setIsTransactionOngoing] = useState(false);
+  const [transactionStatusPopUp, setTransactionStatusPopUp] = useState(false);
   const { metaMaskAccountInfo, setMetaMaskAccountInfo } =
     useContext(WalletContext);
+  const [bidCount, setBidCount] = useState(0);
+  const [bidPrice, setBidPrice] = useState(0);
 
   const HandleRemoveTicket = () => {
     if (tickets > 1) {
@@ -44,17 +48,31 @@ const Batch = () => {
 
   const HandleBuyTickets = () => {
     if (metaMaskAccountInfo.address && metaMaskAccountInfo.isConnected) {
+      setIsTransactionOngoing(true);
       _Bid(
         0.001,
         tickets,
         metaMaskAccountInfo.address,
         metaMaskAccountInfo.web3,
-        metaMaskAccountInfo.contractInstance
+        metaMaskAccountInfo.contractInstance,
+        setIsTransactionOngoing,
+        setTransactionStatusPopUp
       );
     } else {
       setOpenModal(true);
     }
   };
+
+  useEffect(() => {
+    if (metaMaskAccountInfo.web3 && metaMaskAccountInfo.contractInstance) {
+      _getBidCount(metaMaskAccountInfo.contractInstance, setBidCount);
+      _getBidPrice(
+        metaMaskAccountInfo.contractInstance,
+        setBidPrice,
+        metaMaskAccountInfo.web3
+      );
+    }
+  }, [metaMaskAccountInfo.web3, metaMaskAccountInfo.contractInstance]);
 
   return (
     <div className="Batch">
@@ -62,6 +80,12 @@ const Batch = () => {
       {isConnectedPopUp && (
         <MessagePopUp
           message="You've have successfully connected to Metamask Wallect"
+          closePopUp={closePopUp}
+        />
+      )}
+      {transactionStatusPopUp && (
+        <MessagePopUp
+          message={`You've have successfully purchased ${tickets} tickets for Batch #134`}
           closePopUp={closePopUp}
         />
       )}
@@ -91,21 +115,21 @@ const Batch = () => {
           <div>
             <img src={CoinOne} alt="" />
             <div>
-              <h4 className="big">2.44 ETH</h4>
+              <h4 className="big normal">2.44 ETH</h4>
               <h4 className="gray invisible">$4687.29</h4>
             </div>
           </div>
           <div>
             <img src={CoinTwo} alt="" />
             <div>
-              <h4 className="big">0.92 ETH</h4>
+              <h4 className="big normal">0.92 ETH</h4>
               <h4 className="gray invisible">$1767.58</h4>
             </div>
           </div>
           <div>
             <img src={CoinThree} alt="" />
             <div>
-              <h4 className="big">1.33 ETH</h4>
+              <h4 className="big normal">1.33 ETH</h4>
               <h4 className="gray invisible">$2555.30</h4>
             </div>
           </div>
@@ -114,15 +138,15 @@ const Batch = () => {
       <div className="Batch--Tickets--Price">
         <h4 className="gray">Ticket Price:</h4>
         <div>
-          <h4>0.0001 ETH</h4>
-          <h4 className="gray">$0.19</h4>
+          <h4 className="normal">{bidPrice.ethValue} ETH</h4>
+          <h4 className="gray">${bidPrice.usdValue}</h4>
         </div>
       </div>
       <div className="Batch--Tickets--Sold">
         <h4 className="gray">Sold tickets:</h4>
         <div>
-          <h4>18,258</h4>
-          <h4>Transactions</h4>
+          <h4 className="normal">{parseInt(bidCount)}</h4>
+          <h4 className="transaction">Transactions</h4>
         </div>
       </div>
       <div className="Batch--Buy--Container">
@@ -131,9 +155,25 @@ const Batch = () => {
           <h4>{tickets}</h4>
           <img src={RightArrowBtn} alt="" onClick={HandleAddTicket} />
         </div>
-        <div className="Batch--Buy--Button" onClick={HandleBuyTickets}>
-          <h4>Buy 0.002 ETH {tickets} Tickets</h4>
-        </div>
+        {isTransactionOngoing ? (
+          <div
+            className="Batch--Transaction--Button"
+            onClick={HandleBuyTickets}
+          >
+            <h4>
+              Transaction<span className="dot1">.</span>
+              <span className="dot2">.</span>
+              <span className="dot3">.</span>
+            </h4>
+            {/* <h4>Cancel</h4> */}
+          </div>
+        ) : (
+          <div className="Batch--Buy--Button" onClick={HandleBuyTickets}>
+            <h4>
+              Buy {bidPrice.ethValue} ETH {tickets} Tickets
+            </h4>
+          </div>
+        )}
       </div>
     </div>
   );

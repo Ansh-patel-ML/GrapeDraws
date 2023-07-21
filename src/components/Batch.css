@@ -143,6 +143,11 @@
   font-weight: 400;
 }
 
+.normal {
+  font-size: 16px;
+  font-weight: 400;
+}
+
 .big {
   font-size: 23px;
 }
@@ -163,8 +168,78 @@
   .invisible {
     display: none;
   }
+  .Batch--Transaction--Button {
+    width: 100%;
+  }
+}
+
+.transaction {
+  color: #0038ff;
+  font-weight: 400;
+  font-size: 14px;
 }
 
 .keyDown {
   background-color: #bbbbbb;
+}
+
+.Batch--Transaction--Button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2fad23;
+  color: white;
+  gap: 15px;
+  padding: 10px;
+  border: 1px solid #292929;
+  border-radius: 10px;
+  box-shadow: 3px 3px #292929;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.dot1 {
+  animation: fadeInDot1 1s ease-in-out infinite;
+}
+
+.dot2 {
+  animation: fadeInDot2 1s ease-in-out infinite;
+}
+
+.dot3 {
+  animation: fadeInDot3 1s ease-in-out infinite;
+}
+
+@keyframes fadeInDot1 {
+  0% {
+    opacity: 0;
+  }
+  33% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDot2 {
+  0% {
+    opacity: 0;
+  }
+  66% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDot3 {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
