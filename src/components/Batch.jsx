@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import EtheriumIcon from "../assets/Icons/Ethereum.svg";
 import CoinOne from "../assets/Icons/FirstPlace.svg";
@@ -7,10 +7,18 @@ import CoinThree from "../assets/Icons/ThirdPlace.svg";
 import LeftArrowBtn from "../assets/Icons/LeftArrowBtn.svg";
 import RightArrowBtn from "../assets/Icons/RightArrowBtn.svg";
 import InfoIcon from "../assets/Icons/16.svg";
+import { WalletContext } from "../App";
+import ConnectMetaMask from "./modals/ConnectMetaMask";
+import { _Bid } from "../ContractFunctions";
+import MessagePopUp from "./modals/MessagePopUp";
 import "./Batch.css";
 
 const Batch = () => {
   const [tickets, SetTickets] = useState(2);
+  const [openModal, setOpenModal] = useState(false);
+  const [isConnectedPopUp, setIsConnectedPopUp] = useState(false);
+  const { metaMaskAccountInfo, setMetaMaskAccountInfo } =
+    useContext(WalletContext);
 
   const HandleRemoveTicket = () => {
     if (tickets > 1) {
@@ -18,12 +26,45 @@ const Batch = () => {
     }
   };
 
+  const closeConnectModal = (isConnected, address) => {
+    setOpenModal(false);
+    if (address && isConnected) {
+      setIsConnectedPopUp(true);
+      setTimeout(() => {
+        setIsConnectedPopUp(false);
+      }, 7000);
+    }
+  };
+
+  const closePopUp = () => setIsConnectedPopUp(false);
+
   const HandleAddTicket = () => {
     SetTickets((tickets) => tickets + 1);
   };
 
+  const HandleBuyTickets = () => {
+    if (metaMaskAccountInfo.address && metaMaskAccountInfo.isConnected) {
+      _Bid(
+        0.001,
+        tickets,
+        metaMaskAccountInfo.address,
+        metaMaskAccountInfo.web3,
+        metaMaskAccountInfo.contractInstance
+      );
+    } else {
+      setOpenModal(true);
+    }
+  };
+
   return (
     <div className="Batch">
+      {openModal && <ConnectMetaMask closeModal={closeConnectModal} />}
+      {isConnectedPopUp && (
+        <MessagePopUp
+          message="You've have successfully connected to Metamask Wallect"
+          closePopUp={closePopUp}
+        />
+      )}
       <div className="Batch--Heading">
         <h1>Batch #134</h1>
         <div>
@@ -90,7 +131,7 @@ const Batch = () => {
           <h4>{tickets}</h4>
           <img src={RightArrowBtn} alt="" onClick={HandleAddTicket} />
         </div>
-        <div className="Batch--Buy--Button">
+        <div className="Batch--Buy--Button" onClick={HandleBuyTickets}>
           <h4>Buy 0.002 ETH {tickets} Tickets</h4>
         </div>
       </div>

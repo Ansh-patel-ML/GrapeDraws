@@ -1,17 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import useResizeObserver from "../Utils/customHooks/ResizeObserver";
 import GrapeDrawIcon from "../assets/Icons/GrapeDraw.svg";
-import Web3 from "web3";
 import "./Header.css";
-import GrapeDraw from "../contracts/GrapeDraw.json";
 import { MetaMaskAvatar } from "react-metamask-avatar";
+import ConnectMetaMask from "./modals/ConnectMetaMask";
+import { WalletContext } from "../App";
+import MessagePopUp from "./modals/MessagePopUp";
 
 const Header = () => {
   const headerRef = useRef(null);
   const [width, setWidth] = useState(0);
-  const [web3, setWeb3] = useState(null);
-  const [contractInstance, setContractInstance] = useState(null);
-  const [userAddress, setUserAddress] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [isConnectedPopUp, setIsConnectedPopUp] = useState(false);
+  const { metaMaskAccountInfo, setMetaMaskAccountInfo } =
+    useContext(WalletContext);
 
   const handleResize = (entries) => {
     for (let entry of entries) {
@@ -22,52 +24,46 @@ const Header = () => {
 
   useResizeObserver(headerRef, handleResize);
 
-  useEffect(() => {
-    async function loadUserData() {
-      if (contractInstance && !userAddress) {
-        const accounts = await web3.eth.getAccounts();
-        setUserAddress(accounts[0]);
-      }
+  const closeConnectModal = (isConnected, address) => {
+    setOpenModal(false);
+    if (address && isConnected) {
+      setIsConnectedPopUp(true);
+      setTimeout(() => {
+        setIsConnectedPopUp(false);
+      }, 7000);
     }
-    loadUserData();
-  }, [contractInstance, userAddress]);
+  };
+
+  const closePopUp = () => setIsConnectedPopUp(false);
 
   const handleConnect = async () => {
-    try {
-      if (window.ethereum) {
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        const web3Instance = new Web3(window.ethereum);
-        setWeb3(web3Instance);
-        const contractAddress = "0x9d195f5266396A05De0c1756C0e54a317864086B";
-        const contract = new web3Instance.eth.Contract(
-          GrapeDraw.abi,
-          contractAddress
-        );
-        setContractInstance(contract);
-      } else {
-        console.error("MetaMask not detected. Please install MetaMask.");
-      }
-    } catch (error) {
-      console.error("Error connecting:");
-    }
+    setOpenModal(true);
   };
 
   return (
     <div className="header" ref={headerRef}>
+      {openModal && <ConnectMetaMask closeModal={closeConnectModal} />}
+      {isConnectedPopUp && (
+        <MessagePopUp
+          message="You've have successfully connected to Metamask Wallect"
+          closePopUp={closePopUp}
+        />
+      )}
       <div className="header--container">
         <div className="header--grapeDraw">
           <img src={GrapeDrawIcon} alt="GrapeDraw" />
           <h1 className={width >= 414 ? "show" : "hide"}>GRAPEDRAW</h1>
         </div>
-        {userAddress && (
+        {metaMaskAccountInfo.address && (
           <div className="header--user--info">
-            <MetaMaskAvatar address={userAddress} size={32} />
+            <MetaMaskAvatar address={metaMaskAccountInfo.address} size={32} />
             <h4>
-              {userAddress.slice(0, 6)}...{userAddress.slice(-4)}
+              {metaMaskAccountInfo.address.slice(0, 6)}...
+              {metaMaskAccountInfo.address.slice(-4)}
             </h4>
           </div>
         )}
-        {!userAddress && (
+        {!metaMaskAccountInfo.address && (
           <button className="header--connect" onClick={handleConnect}>
             Connect
           </button>
