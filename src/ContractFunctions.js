@@ -9,7 +9,8 @@ export async function _Bid(
   _web3,
   _contractInstance,
   setTransactionOngoing,
-  setTransactiontatusPopUp
+  setTransactiontatusPopUp,
+  setTransactionErrorModal
 ) {
   try {
     const ether = _bidAmount * _noOfBids;
@@ -26,10 +27,12 @@ export async function _Bid(
       setTransactionOngoing(false);
       setTransactiontatusPopUp(true);
     } else {
-      console.log("Transaction failed or reverted!");
+      setTransactionErrorModal(true);
+      setTransactionOngoing(false);
     }
   } catch (error) {
-    console.error("Error bidding:", error);
+    setTransactionErrorModal(true);
+    setTransactionOngoing(false);
   }
 }
 
