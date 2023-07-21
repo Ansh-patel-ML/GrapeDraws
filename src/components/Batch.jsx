@@ -12,6 +12,7 @@ import ConnectMetaMask from "./modals/ConnectMetaMask";
 import { _Bid, _getBidCount, _getBidPrice } from "../ContractFunctions";
 import MessagePopUp from "./modals/MessagePopUp";
 import "./Batch.css";
+import TransactionErrorModal from "./modals/TransactionErrorModal";
 
 const Batch = () => {
   const [tickets, SetTickets] = useState(2);
@@ -23,6 +24,7 @@ const Batch = () => {
     useContext(WalletContext);
   const [bidCount, setBidCount] = useState(0);
   const [bidPrice, setBidPrice] = useState(0);
+  const [transactionErrorModal, setTransactionErrorModal] = useState(false);
 
   const HandleRemoveTicket = () => {
     if (tickets > 1) {
@@ -40,6 +42,8 @@ const Batch = () => {
     }
   };
 
+  const closeTransactionErrorModal = () => setTransactionErrorModal(false);
+
   const closePopUp = () => setIsConnectedPopUp(false);
 
   const HandleAddTicket = () => {
@@ -56,7 +60,8 @@ const Batch = () => {
         metaMaskAccountInfo.web3,
         metaMaskAccountInfo.contractInstance,
         setIsTransactionOngoing,
-        setTransactionStatusPopUp
+        setTransactionStatusPopUp,
+        setTransactionErrorModal
       );
     } else {
       setOpenModal(true);
@@ -88,6 +93,9 @@ const Batch = () => {
           message={`You've have successfully purchased ${tickets} tickets for Batch #134`}
           closePopUp={closePopUp}
         />
+      )}
+      {transactionErrorModal && (
+        <TransactionErrorModal closeModal={closeTransactionErrorModal} />
       )}
       <div className="Batch--Heading">
         <h1>Batch #134</h1>
