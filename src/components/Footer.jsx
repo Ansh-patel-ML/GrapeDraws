@@ -20,7 +20,7 @@ const Footer = () => {
         <p>Created with ♥️ for the Decentralized World.</p>
         <div className="Footer--links--container">
           <a href="#">Terms of Use</a>
-          <a href="#">Privacy Police</a>
+          <a href="#">Privacy Policy</a>
         </div>
       </div>
     </div>

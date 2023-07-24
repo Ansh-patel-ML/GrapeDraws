@@ -6,12 +6,14 @@ import { MetaMaskAvatar } from "react-metamask-avatar";
 import ConnectMetaMask from "./modals/ConnectMetaMask";
 import { WalletContext } from "../App";
 import MessagePopUp from "./modals/MessagePopUp";
+import MetaMaskNotFoundModal from "./modals/MetaMaskNotFoundModal";
 
 const Header = () => {
   const headerRef = useRef(null);
   const [width, setWidth] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [isConnectedPopUp, setIsConnectedPopUp] = useState(false);
+  const [isMetaMaskNotFound, setIsMetaMaskNotFound] = useState(false);
   const { metaMaskAccountInfo, setMetaMaskAccountInfo } =
     useContext(WalletContext);
 
@@ -26,6 +28,7 @@ const Header = () => {
 
   const closeConnectModal = (isConnected, address) => {
     setOpenModal(false);
+    setIsMetaMaskNotFound(false);
     if (address && isConnected) {
       setIsConnectedPopUp(true);
       setTimeout(() => {
@@ -37,7 +40,11 @@ const Header = () => {
   const closePopUp = () => setIsConnectedPopUp(false);
 
   const handleConnect = async () => {
-    setOpenModal(true);
+    if (window.ethereum) {
+      setOpenModal(true);
+    } else {
+      setIsMetaMaskNotFound(true);
+    }
   };
 
   return (
@@ -48,6 +55,9 @@ const Header = () => {
           message="You've have successfully connected to Metamask Wallect"
           closePopUp={closePopUp}
         />
+      )}
+      {isMetaMaskNotFound && (
+        <MetaMaskNotFoundModal closeModal={closeConnectModal} />
       )}
       <div className="header--container">
         <div className="header--grapeDraw">

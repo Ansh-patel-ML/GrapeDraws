@@ -3,7 +3,6 @@ import ActiveBatches from "./components/ActiveBatches";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
-import ConnectMetaMask from "./components/modals/ConnectMetaMask";
 
 export const WalletContext = createContext();
 

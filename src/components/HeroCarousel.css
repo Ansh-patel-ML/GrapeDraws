@@ -44,7 +44,7 @@
   flex-grow: 1;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 640px) {
   .carousel--container {
     overflow-x: scroll;
     justify-content: flex-start;
@@ -65,6 +65,6 @@
     border: 1px solid #292929;
   }
   .carousel--container::-webkit-scrollbar-button {
-    width: 11px;
+    width: 6px;
   }
 }

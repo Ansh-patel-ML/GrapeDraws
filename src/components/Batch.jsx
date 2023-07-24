@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 
 import EtheriumIcon from "../assets/Icons/Ethereum.svg";
-import CoinOne from "../assets/Icons/FirstPlace.svg";
-import CoinTwo from "../assets/Icons/SecondPlace.svg";
-import CoinThree from "../assets/Icons/ThirdPlace.svg";
+import CoinOne from "../assets/Icons/FirstPlace.png";
+import CoinTwo from "../assets/Icons/SecondPlace.png";
+import CoinThree from "../assets/Icons/ThirdPlace.png";
 import LeftArrowBtn from "../assets/Icons/LeftArrowBtn.svg";
 import RightArrowBtn from "../assets/Icons/RightArrowBtn.svg";
 import InfoIcon from "../assets/Icons/16.svg";
@@ -13,6 +13,7 @@ import { _Bid, _getBidCount, _getBidPrice } from "../ContractFunctions";
 import MessagePopUp from "./modals/MessagePopUp";
 import "./Batch.css";
 import TransactionErrorModal from "./modals/TransactionErrorModal";
+import MetaMaskNotFoundModal from "./modals/MetaMaskNotFoundModal";
 
 const Batch = () => {
   const [tickets, SetTickets] = useState(2);
@@ -25,6 +26,7 @@ const Batch = () => {
   const [bidCount, setBidCount] = useState(0);
   const [bidPrice, setBidPrice] = useState(0);
   const [transactionErrorModal, setTransactionErrorModal] = useState(false);
+  const [isMetaMaskNotFound, setIsMetaMaskNotFound] = useState(false);
 
   const HandleRemoveTicket = () => {
     if (tickets > 1) {
@@ -34,6 +36,7 @@ const Batch = () => {
 
   const closeConnectModal = (isConnected, address) => {
     setOpenModal(false);
+    setIsMetaMaskNotFound(false);
     if (address && isConnected) {
       setIsConnectedPopUp(true);
       setTimeout(() => {
@@ -54,7 +57,7 @@ const Batch = () => {
     if (metaMaskAccountInfo.address && metaMaskAccountInfo.isConnected) {
       setIsTransactionOngoing(true);
       _Bid(
-        0.001,
+        bidPrice.ethValue,
         tickets,
         metaMaskAccountInfo.address,
         metaMaskAccountInfo.web3,
@@ -64,7 +67,11 @@ const Batch = () => {
         setTransactionErrorModal
       );
     } else {
-      setOpenModal(true);
+      if (window.ethereum) {
+        setOpenModal(true);
+      } else {
+        setIsMetaMaskNotFound(true);
+      }
     }
   };
 
@@ -96,6 +103,9 @@ const Batch = () => {
       )}
       {transactionErrorModal && (
         <TransactionErrorModal closeModal={closeTransactionErrorModal} />
+      )}
+      {isMetaMaskNotFound && (
+        <MetaMaskNotFoundModal closeModal={closeConnectModal} />
       )}
       <div className="Batch--Heading">
         <h1>Batch #134</h1>

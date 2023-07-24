@@ -6,7 +6,6 @@
   border: 1px solid #292929;
   border-radius: 10px;
   box-shadow: 5px 5px #292929;
-  max-width: 700px;
   user-select: none;
   margin-bottom: 20px;
 }
@@ -170,6 +169,12 @@
   }
   .Batch--Transaction--Button {
     width: 100%;
+  }
+}
+
+@media (max-width: 789px) {
+  .Batch--Add--Button {
+    flex-grow: 1;
   }
 }
 
