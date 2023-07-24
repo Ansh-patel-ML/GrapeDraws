@@ -49,6 +49,13 @@
   box-shadow: -3px -3px #292929;
   margin-bottom: 10px;
   cursor: pointer;
+  transition: box-shadow 0.5s ease, background-color 0.5s ease, color 0.5s ease;
+}
+
+.Connect--Metamask--Button:hover {
+  background-color: #fff;
+  color: #292929;
+  box-shadow: -3px -3px #fff;
 }
 
 .close-modal {
